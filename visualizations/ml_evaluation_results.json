@@ -1,0 +1,121 @@
+{
+  "models": {
+    "Random Forest": {
+      "Accuracy": 0.6537,
+      "Precision": 0.647,
+      "Recall": 0.6537,
+      "F1-Score": 0.6378,
+      "AUC-ROC": 0.7242,
+      "Train_Time_Sec": 18.54,
+      "Inference_Time_Sec": 0.24,
+      "TP": 3396,
+      "FP": 2103,
+      "TN": 9560,
+      "FN": 4759
+    },
+    "Gradient-Boosted Trees (GBT)": {
+      "Accuracy": 0.6649,
+      "Precision": 0.6592,
+      "Recall": 0.6649,
+      "F1-Score": 0.6587,
+      "AUC-ROC": 0.7338,
+      "Train_Time_Sec": 18.96,
+      "Inference_Time_Sec": 0.13,
+      "TP": 4143,
+      "FP": 2630,
+      "TN": 9033,
+      "FN": 4012
+    },
+    "Decision Tree": {
+      "Accuracy": 0.6416,
+      "Precision": 0.6339,
+      "Recall": 0.6416,
+      "F1-Score": 0.6327,
+      "AUC-ROC": 0.6193,
+      "Train_Time_Sec": 4.79,
+      "Inference_Time_Sec": 0.14,
+      "TP": 3734,
+      "FP": 2681,
+      "TN": 8982,
+      "FN": 4421
+    },
+    "Logistic Regression": {
+      "Accuracy": 0.6251,
+      "Precision": 0.614,
+      "Recall": 0.6251,
+      "F1-Score": 0.6007,
+      "AUC-ROC": 0.6819,
+      "Train_Time_Sec": 5.97,
+      "Inference_Time_Sec": 0.11,
+      "TP": 2786,
+      "FP": 2061,
+      "TN": 9602,
+      "FN": 5369
+    }
+  },
+  "feature_importances": [
+    [
+      "traffic_signal_flag",
+      0.4322
+    ],
+    [
+      "crossing_flag",
+      0.2555
+    ],
+    [
+      "state_idx",
+      0.1286
+    ],
+    [
+      "junction_flag",
+      0.0495
+    ],
+    [
+      "duration_minutes",
+      0.0293
+    ],
+    [
+      "temperature_f",
+      0.0187
+    ],
+    [
+      "weather_condition_idx",
+      0.0179
+    ],
+    [
+      "accident_day_of_week_idx",
+      0.0166
+    ],
+    [
+      "accident_hour",
+      0.0139
+    ],
+    [
+      "humidity_pct",
+      0.0105
+    ],
+    [
+      "amenity_flag",
+      0.0094
+    ],
+    [
+      "wind_speed_mph",
+      0.0072
+    ],
+    [
+      "precipitation_in",
+      0.0039
+    ],
+    [
+      "visibility_mi",
+      0.0037
+    ],
+    [
+      "sunrise_sunset_idx",
+      0.003
+    ]
+  ],
+  "dataset_records": 100000,
+  "train_size": 80182,
+  "test_size": 19818
+}

@@ -1,0 +1,67 @@
+{
+  "dataset_records_ingested": 100000,
+  "clean_records_retained": 99997,
+  "columns_count": 27,
+  "null_counts": {
+    "temperature_f": {
+      "missing_count": 0,
+      "missing_pct": 0.0
+    },
+    "humidity_pct": {
+      "missing_count": 0,
+      "missing_pct": 0.0
+    },
+    "visibility_mi": {
+      "missing_count": 0,
+      "missing_pct": 0.0
+    },
+    "wind_speed_mph": {
+      "missing_count": 0,
+      "missing_pct": 0.0
+    },
+    "precipitation_in": {
+      "missing_count": 0,
+      "missing_pct": 0.0
+    },
+    "duration_minutes": {
+      "missing_count": 0,
+      "missing_pct": 0.0
+    }
+  },
+  "target_class_distribution": {
+    "mild_count": 58797,
+    "severe_count": 41200
+  },
+  "engineered_features": [
+    "is_severe",
+    "is_rush_hour",
+    "is_weekend",
+    "is_low_visibility",
+    "is_sub_freezing",
+    "infra_vulnerability_index"
+  ],
+  "total_vector_dimensions": 20,
+  "feature_list": [
+    "temperature_f_imp",
+    "humidity_pct_imp",
+    "visibility_mi_imp",
+    "wind_speed_mph_imp",
+    "precipitation_in_imp",
+    "duration_minutes_imp",
+    "accident_hour",
+    "amenity_flag",
+    "crossing_flag",
+    "junction_flag",
+    "traffic_signal_flag",
+    "is_rush_hour",
+    "is_weekend",
+    "is_low_visibility",
+    "is_sub_freezing",
+    "infra_vulnerability_index",
+    "state_idx",
+    "weather_condition_idx",
+    "sunrise_sunset_idx",
+    "accident_day_of_week_idx"
+  ],
+  "preprocessing_runtime_sec": 32.11
+}

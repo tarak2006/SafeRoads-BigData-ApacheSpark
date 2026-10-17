@@ -1,0 +1,5 @@
+println("HELLO FROM SCALA SPARK!")
+val rdd = sc.parallelize(1 to 10, 2)
+println(s"RDD Partitions: ${rdd.getNumPartitions}")
+println(s"RDD Sum: ${rdd.reduce(_ + _)}")
+sys.exit(0)

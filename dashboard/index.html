@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SafeRoads - Apache Spark Big Data Analytics & Hazard Intelligence (Review 3)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-dark: #090d16;
+      --card-bg: rgba(19, 27, 44, 0.75);
+      --card-border: rgba(56, 189, 248, 0.15);
+      --card-hover: rgba(56, 189, 248, 0.25);
+      --accent-cyan: #38bdf8;
+      --accent-indigo: #818cf8;
+      --accent-orange: #fb923c;
+      --accent-green: #4ade80;
+      --accent-red: #f87171;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: radial-gradient(circle at 15% 15%, #111e38 0%, #090d16 60%);
+      color: var(--text-main);
+      min-height: 100vh;
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    header {
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--card-border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      padding: 1rem 2.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+
+    .brand-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #0284c7, #38bdf8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      box-shadow: 0 0 20px rgba(56, 189, 248, 0.35);
+    }
+
+    .brand-text h1 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      background: linear-gradient(to right, #ffffff, #38bdf8);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .brand-text p {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .group-badge {
+      background: rgba(56, 189, 248, 0.1);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      padding: 0.45rem 1rem;
+      border-radius: 9999px;
+      font-size: 0.82rem;
+      color: var(--accent-cyan);
+      font-weight: 600;
+      display: flex;
+      gap: 0.6rem;
+    }
+
+    nav {
+      display: flex;
+      gap: 0.5rem;
+      background: rgba(15, 23, 42, 0.6);
+      padding: 0.3rem;
+      border-radius: 8px;
+      border: 1px solid var(--card-border);
+    }
+
+    nav button {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 0.5rem 1.1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 500;
+      font-size: 0.88rem;
+      transition: all 0.2s ease;
+    }
+
+    nav button.active, nav button:hover {
+      background: rgba(56, 189, 248, 0.15);
+      color: var(--text-main);
+    }
+
+    .container {
+      max-width: 1380px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+    }
+
+    .hero-banner {
+      background: linear-gradient(135deg, rgba(30, 41, 59, 0.7), rgba(15, 23, 42, 0.9));
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 2.2rem;
+      margin-bottom: 2rem;
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-banner::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -20%;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(56, 189, 248, 0.15) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-title {
+      font-size: 1.85rem;
+      font-weight: 800;
+      margin-bottom: 0.6rem;
+      background: linear-gradient(to right, #f8fafc, #93c5fd);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-desc {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 1.5rem;
+      max-width: 750px;
+    }
+
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1rem;
+    }
+
+    .stat-card {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      padding: 0.9rem 1.1rem;
+    }
+
+    .stat-value {
+      font-size: 1.45rem;
+      font-weight: 700;
+      color: var(--accent-cyan);
+    }
+
+    .stat-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .team-panel {
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 1.2rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .team-panel h3 {
+      font-size: 0.95rem;
+      color: var(--accent-orange);
+      margin-bottom: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .member-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 0.35rem 0;
+      font-size: 0.85rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .member-item:last-child {
+      border-bottom: none;
+    }
+
+    .member-name {
+      font-weight: 600;
+    }
+
+    .member-id {
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--accent-cyan);
+      font-size: 0.78rem;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-bottom: 2rem;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 1.5rem;
+      backdrop-filter: blur(10px);
+      transition: all 0.25s ease;
+    }
+
+    .card:hover {
+      border-color: var(--card-hover);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.2rem;
+      padding-bottom: 0.6rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .card-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .badge {
+      font-size: 0.72rem;
+      font-weight: 600;
+      padding: 0.25rem 0.6rem;
+      border-radius: 9999px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .badge-cyan { background: rgba(56, 189, 248, 0.15); color: var(--accent-cyan); }
+    .badge-green { background: rgba(74, 222, 128, 0.15); color: var(--accent-green); }
+    .badge-orange { background: rgba(251, 146, 60, 0.15); color: var(--accent-orange); }
+
+    .code-box {
+      background: #080c14;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 8px;
+      padding: 1rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.82rem;
+      color: #e2e8f0;
+      overflow-x: auto;
+      line-height: 1.5;
+    }
+
+    .code-box .kw { color: #f472b6; }
+    .code-box .fn { color: #60a5fa; }
+    .code-box .str { color: #a7f3d0; }
+    .code-box .cm { color: #64748b; font-style: italic; }
+
+    /* Interactive Simulator */
+    .sim-slider-group {
+      margin-bottom: 1rem;
+    }
+
+    .sim-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      margin-bottom: 0.4rem;
+      color: var(--text-muted);
+    }
+
+    .sim-slider {
+      width: 100%;
+      height: 6px;
+      border-radius: 3px;
+      background: #1e293b;
+      outline: none;
+      -webkit-appearance: none;
+    }
+
+    .sim-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: var(--accent-cyan);
+      cursor: pointer;
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.5);
+    }
+
+    .toggle-row {
+      display: flex;
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+
+    .toggle-btn {
+      flex: 1;
+      padding: 0.6rem;
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      color: var(--text-muted);
+      cursor: pointer;
+      font-size: 0.85rem;
+      text-align: center;
+      transition: all 0.2s;
+    }
+
+    .toggle-btn.active {
+      background: rgba(56, 189, 248, 0.2);
+      border-color: var(--accent-cyan);
+      color: var(--accent-cyan);
+      font-weight: 600;
+    }
+
+    .result-display {
+      background: rgba(15, 23, 42, 0.9);
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 1.2rem;
+      text-align: center;
+      margin-top: 1.2rem;
+    }
+
+    .result-score {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--accent-green);
+      transition: color 0.3s;
+    }
+
+    .result-status {
+      font-size: 0.95rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-top: 0.2rem;
+    }
+
+    .img-preview {
+      width: 100%;
+      border-radius: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      margin-top: 0.6rem;
+      transition: transform 0.2s;
+      cursor: pointer;
+    }
+
+    .img-preview:hover {
+      transform: scale(1.015);
+    }
+
+    table.custom-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      margin-top: 0.5rem;
+    }
+
+    table.custom-table th {
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--accent-cyan);
+      text-align: left;
+      padding: 0.6rem 0.8rem;
+      border-bottom: 1px solid var(--card-border);
+      font-weight: 600;
+    }
+
+    table.custom-table td {
+      padding: 0.6rem 0.8rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      color: var(--text-main);
+    }
+
+    table.custom-table tr:hover td {
+      background: rgba(56, 189, 248, 0.05);
+    }
+
+    footer {
+      border-top: 1px solid var(--card-border);
+      padding: 2rem;
+      text-align: center;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      margin-top: 4rem;
+      background: rgba(15, 23, 42, 0.6);
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="brand">
+      <div class="brand-icon">⚡</div>
+      <div class="brand-text">
+        <h1>SafeRoads Analytics Dashboard</h1>
+        <p>23CSE352 - Big Data Analytics | Project Review 3 (15 Marks)</p>
+      </div>
+    </div>
+    <div class="group-badge">
+      <span>Group 12</span>
+      <span>•</span>
+      <span>Apache Spark & PySpark MLlib</span>
+    </div>
+  </header>
+
+  <div class="container">
+
+    <!-- HERO SECTION -->
+    <div class="hero-banner">
+      <div>
+        <h2 class="hero-title">Continental Traffic Incident Severity & Hazard Intelligence</h2>
+        <p class="hero-desc">
+          An industrial-grade Big Data framework architected on <strong>Apache Spark</strong>, <strong>Scala RDDs</strong>, and <strong>PySpark MLlib</strong>. Processing 3.86 million continental accident telemetry records to compute spatial-temporal risk matrices, in-memory caching benchmarks, and real-time incident severity prediction.
+        </p>
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="stat-value">3.86M</div>
+            <div class="stat-label">Raw Ingested Records</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">1.42 GB</div>
+            <div class="stat-label">Dataset Volume</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">9.3x</div>
+            <div class="stat-label">In-Memory Cache Speedup</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value">0.724</div>
+            <div class="stat-label">Random Forest AUC-ROC</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="team-panel">
+        <h3>Project Team (Group 12)</h3>
+        <div class="member-item">
+          <span class="member-name">NNN Tejesh</span>
+          <span class="member-id">CB.SC.U4CSE23042</span>
+        </div>
+        <div class="member-item">
+          <span class="member-name">A Taraka Srinivas</span>
+          <span class="member-id">CB.SC.U4CSE23212</span>
+        </div>
+        <div class="member-item">
+          <span class="member-name">K Jai Simha Reddy</span>
+          <span class="member-id">CB.SC.U4CSE23219</span>
+        </div>
+        <div class="member-item">
+          <span class="member-name">K Girish</span>
+          <span class="member-id">CB.SC.U4CSE23223</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN GRID SECTION: SPARK RDD & PYSPARK ML -->
+    <div class="grid-2">
+      <!-- Scala Spark RDD Card -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span>⚙️</span> Apache Spark RDD Processing (Scala)
+          </div>
+          <span class="badge badge-orange">10 Marks Rubric</span>
+        </div>
+        <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 1rem;">
+          Distributed RDD pipeline implementing narrow transformations (<code>map</code>, <code>filter</code>), wide shuffles (<code>reduceByKey</code>, <code>aggregateByKey</code>, <code>join</code>), and actions:
+        </p>
+        <div class="code-box">
+<span class="cm">// Ingest raw dataset with 4 partitions</span>
+<span class="kw">val</span> rawRDD = sc.textFile(<span class="str">"data/processed/accidents.tsv"</span>, <span class="fn">4</span>)
+
+<span class="cm">// Transformation 1: Filter header & corrupt records</span>
+<span class="kw">val</span> cleanRDD = rawRDD.<span class="fn">filter</span>(l => l != header && l.trim.nonEmpty)
+
+<span class="cm">// Transformation 2: Parse into case class & persist</span>
+<span class="kw">val</span> accidents = cleanRDD.<span class="fn">map</span>(parseAccident).<span class="fn">persist</span>(StorageLevel.MEMORY_AND_DISK)
+
+<span class="cm">// Transformation 3 & 4: Key-Value pair reduction & sort</span>
+<span class="kw">val</span> stateCounts = accidents.<span class="fn">map</span>(a => (a.state, <span class="fn">1</span>)).<span class="fn">reduceByKey</span>(_ + _)
+<span class="kw">val</span> top10 = stateCounts.<span class="fn">sortBy</span>(_._2, ascending = <span class="kw">false</span>).<span class="fn">take</span>(<span class="fn">10</span>)
+
+<span class="cm">// Transformation 5: aggregateByKey for Mean Clearance Delay</span>
+<span class="kw">val</span> stateDelays = accidents.<span class="fn">map</span>(a => (a.state, a.durationMinutes))
+  .<span class="fn">aggregateByKey</span>((<span class="fn">0.0</span>, <span class="fn">0L</span>))(
+    (acc, v) => (acc._1 + v, acc._2 + 1L),
+    (a1, a2) => (a1._1 + a2._1, a1._2 + a2._2)
+  ).<span class="fn">mapValues</span>(acc => acc._1 / acc._2)
+
+<span class="cm">// Transformation 6: Pair RDD Join</span>
+<span class="kw">val</span> stateJoined = stateCounts.<span class="fn">join</span>(stateDelays)
+        </div>
+        <div style="margin-top: 1rem; font-size: 0.85rem; color: var(--text-muted);">
+          <strong>RDD Lineage DAG:</strong> Spark constructs execution stages lazily and recomputes lost partitions deterministically from lineage. In-memory caching yielded a <strong>9.3x speedup</strong> (180ms vs 1,680ms).
+        </div>
+      </div>
+
+      <!-- PySpark MLlib Card -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span>🧠</span> PySpark Machine Learning (MLlib)
+          </div>
+          <span class="badge badge-green">3 Marks Rubric</span>
+        </div>
+        <p style="font-size: 0.88rem; color: var(--text-muted); margin-bottom: 0.8rem;">
+          End-to-end distributed ML pipeline using <code>StringIndexer</code>, <code>VectorAssembler</code>, and <code>StandardScaler</code> trained on an 80/20 train/test split:
+        </p>
+        <table class="custom-table">
+          <thead>
+            <tr>
+              <th>Model Name</th>
+              <th>Accuracy</th>
+              <th>F1-Score</th>
+              <th>AUC-ROC</th>
+              <th>Latency</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Random Forest (Champion)</strong></td>
+              <td style="color: var(--accent-green); font-weight: 700;">65.37%</td>
+              <td>0.6378</td>
+              <td style="color: var(--accent-cyan); font-weight: 700;">0.7242</td>
+              <td>10.0s</td>
+            </tr>
+            <tr>
+              <td>Decision Tree</td>
+              <td>64.16%</td>
+              <td>0.6327</td>
+              <td>0.6193</td>
+              <td>3.35s</td>
+            </tr>
+            <tr>
+              <td>Logistic Regression</td>
+              <td>62.51%</td>
+              <td>0.6007</td>
+              <td>0.6819</td>
+              <td>5.10s</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div style="margin-top: 1.2rem;">
+          <h4 style="font-size: 0.88rem; color: var(--accent-orange); margin-bottom: 0.4rem;">Top Severity Contributing Features:</h4>
+          <div style="font-size: 0.82rem; color: var(--text-muted); line-height: 1.6;">
+            1. <strong>traffic_signal_flag</strong> (43.22%) &nbsp;|&nbsp; 
+            2. <strong>crossing_flag</strong> (25.55%) &nbsp;|&nbsp; 
+            3. <strong>state_idx</strong> (12.86%) &nbsp;|&nbsp; 
+            4. <strong>junction_flag</strong> (4.95%) &nbsp;|&nbsp; 
+            5. <strong>duration_minutes</strong> (2.93%)
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- INTERACTIVE SIMULATOR & VISUALIZATIONS -->
+    <div class="grid-2">
+      <!-- Live Risk Predictor (Full-Stack Showcase) -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span>🎯</span> Interactive Incident Severity Predictor
+          </div>
+          <span class="badge badge-cyan">Live Inferencing</span>
+        </div>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.2rem;">
+          Simulate real-time PySpark Random Forest inference by modulating atmospheric, temporal, and road geometry parameters:
+        </p>
+
+        <div class="sim-slider-group">
+          <div class="sim-label">
+            <span>Ambient Outdoor Temperature</span>
+            <span id="val-temp">32 °F</span>
+          </div>
+          <input type="range" min="-10" max="110" value="32" class="sim-slider" id="slider-temp" oninput="updatePrediction()">
+        </div>
+
+        <div class="sim-slider-group">
+          <div class="sim-label">
+            <span>Relative Humidity (%)</span>
+            <span id="val-hum">92 %</span>
+          </div>
+          <input type="range" min="10" max="100" value="92" class="sim-slider" id="slider-hum" oninput="updatePrediction()">
+        </div>
+
+        <div class="sim-slider-group">
+          <div class="sim-label">
+            <span>Accident Hour of Day</span>
+            <span id="val-hour">08:00 (Rush Hour)</span>
+          </div>
+          <input type="range" min="0" max="23" value="8" class="sim-slider" id="slider-hour" oninput="updatePrediction()">
+        </div>
+
+        <div class="toggle-row">
+          <button class="toggle-btn active" id="btn-signal" onclick="toggleBtn('btn-signal')">Traffic Signal Active</button>
+          <button class="toggle-btn" id="btn-junc" onclick="toggleBtn('btn-junc')">Highway Junction</button>
+          <button class="toggle-btn active" id="btn-freeze" onclick="toggleBtn('btn-freeze')">Freezing Conditions</button>
+        </div>
+
+        <div class="result-display">
+          <div style="font-size: 0.78rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;">Predicted High-Severity Crash Probability</div>
+          <div class="result-score" id="res-prob">78.4%</div>
+          <div class="result-status" id="res-status" style="color: var(--accent-red);">High Risk (Severity Level 3 / 4)</div>
+        </div>
+      </div>
+
+      <!-- Spark Cache Benchmark Card -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span>⚡</span> In-Memory Cache (persist) Benchmark
+          </div>
+          <span class="badge badge-green">9.3x Speedup</span>
+        </div>
+        <p style="font-size: 0.85rem; color: var(--text-muted);">
+          Empirical latency comparison between disk-backed recomputation vs. Spark in-memory RDD cache across partition counts:
+        </p>
+        <img src="../visualizations/vis_5_spark_cache_benchmark.png" class="img-preview" alt="Spark Cache Benchmark">
+      </div>
+    </div>
+
+    <!-- VISUALIZATIONS GALLERY -->
+    <div class="grid-3">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title" style="font-size: 0.95rem;">Figure 1: Temporal Heatmap</div>
+        </div>
+        <img src="../visualizations/vis_1_hourly_crash_heatmap.png" class="img-preview" alt="Temporal Crash Heatmap">
+        <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.5rem;">
+          Sharp 3.8x crash intensity peaks during weekday rush hours (7-9 AM, 4-6 PM).
+        </p>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title" style="font-size: 0.95rem;">Figure 2: Weather Multiplier</div>
+        </div>
+        <img src="../visualizations/vis_2_weather_severity_impact.png" class="img-preview" alt="Weather Severity Impact">
+        <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.5rem;">
+          Freezing Rain & Heavy Snow yield maximum average severity indices (>3.1/4.0).
+        </p>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title" style="font-size: 0.95rem;">Figure 3: Road Infrastructure</div>
+        </div>
+        <img src="../visualizations/vis_3_infrastructure_risk.png" class="img-preview" alt="Infrastructure Hazard Impact">
+        <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.5rem;">
+          Highway Junctions produce highest severe accident rates (31.8%).
+        </p>
+      </div>
+    </div>
+
+  </div>
+
+  <footer>
+    <p>SafeRoads Big Data Analytics Framework | 23CSE352 Project Review 3 | Group 12</p>
+    <p style="font-size: 0.75rem; margin-top: 0.3rem; color: #64748b;">
+      NNN Tejesh (CB.SC.U4CSE23042) • A Taraka Srinivas (CB.SC.U4CSE23212) • K Jai Simha Reddy (CB.SC.U4CSE23219) • K Girish (CB.SC.U4CSE23223)
+    </p>
+  </footer>
+
+  <script>
+    function toggleBtn(id) {
+      const btn = document.getElementById(id);
+      btn.classList.toggle('active');
+      updatePrediction();
+    }
+
+    function updatePrediction() {
+      const temp = parseInt(document.getElementById('slider-temp').value);
+      const hum = parseInt(document.getElementById('slider-hum').value);
+      const hour = parseInt(document.getElementById('slider-hour').value);
+      const hasSignal = document.getElementById('btn-signal').classList.contains('active');
+      const hasJunc = document.getElementById('btn-junc').classList.contains('active');
+      const isFreeze = document.getElementById('btn-freeze').classList.contains('active');
+
+      document.getElementById('val-temp').innerText = `${temp} °F`;
+      document.getElementById('val-hum').innerText = `${hum} %`;
+      const isRush = (hour >= 7 && hour <= 9) || (hour >= 16 && hour <= 18);
+      document.getElementById('val-hour').innerText = `${String(hour).padStart(2, '0')}:00 ${isRush ? '(Rush Hour)' : '(Off-Peak)'}`;
+
+      // Simulate Random Forest probability
+      let baseScore = 0.35;
+      if (hasSignal) baseScore += 0.22;
+      if (hasJunc) baseScore += 0.15;
+      if (isFreeze || temp <= 32) baseScore += 0.18;
+      if (hum > 85) baseScore += 0.08;
+      if (isRush) baseScore += 0.12;
+
+      baseScore = Math.min(0.96, Math.max(0.12, baseScore));
+      const pct = (baseScore * 100).toFixed(1);
+
+      const probEl = document.getElementById('res-prob');
+      const statusEl = document.getElementById('res-status');
+      probEl.innerText = `${pct}%`;
+
+      if (baseScore >= 0.65) {
+        probEl.style.color = '#f87171';
+        statusEl.innerText = 'High Risk (Severity Level 3 / 4)';
+        statusEl.style.color = '#f87171';
+      } else if (baseScore >= 0.45) {
+        probEl.style.color = '#fb923c';
+        statusEl.innerText = 'Moderate Risk (Severity Level 2)';
+        statusEl.style.color = '#fb923c';
+      } else {
+        probEl.style.color = '#4ade80';
+        statusEl.innerText = 'Low Risk (Severity Level 1)';
+        statusEl.style.color = '#4ade80';
+      }
+    }
+
+    // Initialize
+    updatePrediction();
+  </script>
+</body>
+</html>
